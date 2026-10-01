@@ -4,9 +4,285 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Al-Khidmah Students Foundation</title>
+    <!-- FontAwesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #090a0e;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background-color: #090a0e;
+            position: relative;
+            padding-bottom: 80px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        /* Top Bar */
+        .top-bar {
+            background-color: #024423;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            width: 35px;
+            height: 35px;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #024423;
+            font-size: 18px;
+        }
+        .brand-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .brand-subtitle {
+            font-size: 11px;
+            color: #a7f3d0;
+        }
+
+        /* Sub Header Banner */
+        .sub-header {
+            background: linear-gradient(180deg, #024423 0%, #046a38 100%);
+            padding: 15px;
+            text-align: center;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+        .sub-header-title {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background-color: #14161f;
+            margin: 15px;
+            padding: 20px 15px;
+            border-radius: 16px;
+            border: 1px solid #1f2430;
+            text-align: center;
+        }
+        .avatar-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+        }
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #046a38;
+            object-fit: cover;
+            background-color: #2a2e3d;
+        }
+        .user-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid #fbbf24;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Info List */
+        .info-list {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #1a1e29;
+            font-size: 13px;
+        }
+        .info-icon {
+            width: 30px;
+            color: #046a38;
+            font-size: 15px;
+        }
+        .info-label {
+            width: 100px;
+            color: #9ca3af;
+        }
+        .info-value {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #f59e0b;
+            color: #000;
+        }
+        .btn-secondary {
+            background-color: #d97706;
+            color: #000;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background-color: #0d0f14;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #1a1e29;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6b7280;
+            font-size: 11px;
+            text-decoration: none;
+        }
+        .nav-item.active {
+            color: #fbbf24;
+        }
+        .nav-item i {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+    </style>
 </head>
-<body style="font-family: sans-serif; text-align: center; padding: 50px;">
-    <h1>Welcome to Al-Khidmah Students Foundation</h1>
-    <p>আমাদের ওয়েবসাইটটি শীঘ্রই সম্পূর্ণ চালু হতে যাচ্ছে।</p>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="top-bar">
+            <div class="brand-info">
+                <div class="logo"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div>
+                    <div class="brand-title">AL-KHEDMAH</div>
+                    <div class="brand-subtitle">আল-খিদমাহ ছাত্র ফাউন্ডেশন</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner -->
+        <div class="sub-header">
+            <div class="sub-header-title">
+                <i class="fa-solid fa-shield-halved"></i>
+                AL-KHEDMAH STUDENTS FOUNDATION
+            </div>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="avatar-container">
+                <img src="https://via.placeholder.com/150" alt="Profile" class="avatar">
+            </div>
+            
+            <h2 class="user-name">মোঃ শামীম</h2>
+            <div class="badge">📍 পদবী: সম্মানিত কার্যকরী সদস্য</div>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-icon"><i class="fa-solid fa-briefcase"></i></span>
+                    <span class="info-label">পেশা:</span>
+                    <span class="info-value">সফটওয়্যার প্রকৌশলী</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                    <span class="info-label">শিক্ষা:</span>
+                    <span class="info-value">বি.এসসি (সিএসই)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon"><i class="fa-solid fa-location-dot"></i></span>
+                    <span class="info-label">ঠিকানা:</span>
+                    <span class="info-value">মিরপুর, ঢাকা, বাংলাদেশ</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon"><i class="fa-solid fa-phone"></i></span>
+                    <span class="info-label">নাম্বার:</span>
+                    <span class="info-value">০১৭০০-০০০০০০</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon"><i class="fa-solid fa-droplet"></i></span>
+                    <span class="info-label">রক্তের গ্রুপ:</span>
+                    <span class="info-value">B+</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon"><i class="fa-solid fa-calendar"></i></span>
+                    <span class="info-label">সদস্যপদ সাল:</span>
+                    <span class="info-value">২০২২</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary">নতুন অ্যাকাউন্ট সাইন-আপ করুন</button>
+            <button class="btn btn-secondary">✏️ প্রোফাইল তথ্য সম্পাদনা করুন</button>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>হোম</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-circle-play"></i>
+                <span>ভিডিও/সংবাদ</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>সদস্যবৃন্দ</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>নোটিশ</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-user"></i>
+                <span>প্রোফাইল</span>
+            </a>
+        </div>
+    </div>
 </body>
 </html>
