@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">AL-KHEDMAH STUDENTS FOUNDATION</string>
+    <string name="app_tagline">ঐক্য, শিক্ষা ও কল্যাণে AL-KHEDMAH STUDENTS FOUNDATION</string>
+    <string name="tab_home">হোম</string>
+    <string name="tab_video">ভিডিও/লাইভ</string>
+    <string name="tab_members">সদস্যগণ</string>
+    <string name="tab_messages">মেসেজ</string>
+    <string name="tab_profile">প্রোফাইল</string>
+    <string name="settings">সেটিংস</string>
+    <string name="admin_panel">এডমিন প্যানেল</string>
+    <string name="signup">নতুন সাইন-আপ</string>
+    <string name="notifications">নোটিফিকেশন</string>
+    <string name="comments">লোকজনের কমেন্ট</string>
+</resources>

@@ -1,0 +1,6 @@
+{
+  "name": "AL-KHEDMAH STUDENTS FOUNDATION",
+  "description": "AL-KHEDMAH STUDENTS FOUNDATION - ছাত্র কল্যাণ, শিক্ষা বৃত্তি, সদস্যপদ, পদবী ও সামাজিক ঐক্য প্ল্যাটফর্ম",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
