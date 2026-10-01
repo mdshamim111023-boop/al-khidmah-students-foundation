@@ -7,10 +7,6 @@
     <!-- FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Firebase SDK (Realtime Public Data Sync) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <style>
         * {
             box-sizing: border-box;
@@ -344,9 +340,7 @@
             <button class="btn btn-green" onclick="openModal('add-post-modal')">
                 <i class="fa-solid fa-image"></i> গ্যালারি থেকে ছবিসহ পোস্ট করুন
             </button>
-            <div id="posts-container">
-                <p style="text-align:center; color:#888; padding:20px;">পোস্ট লোড হচ্ছে...</p>
-            </div>
+            <div id="posts-container"></div>
         </div>
 
         <!-- 2. VIDEO / NEWS VIEW -->
@@ -354,9 +348,7 @@
             <button class="btn btn-green" onclick="openModal('add-video-modal')">
                 <i class="fa-solid fa-file-video"></i> গ্যালারি থেকে ভিডিও আপলোড করুন
             </button>
-            <div id="videos-container">
-                <p style="text-align:center; color:#888; padding:20px;">ভিডিও লোড হচ্ছে...</p>
-            </div>
+            <div id="videos-container"></div>
         </div>
 
         <!-- 3. MEMBERS VIEW -->
@@ -365,9 +357,7 @@
                 <h3>সকল সদস্যদের তালিকা</h3>
                 <p>ফাউন্ডেশনের নিবন্ধিত সদস্যবৃন্দ।</p>
             </div>
-            <div id="members-container">
-                <p style="text-align:center; color:#888; padding:20px;">সদস্য তালিকা লোড হচ্ছে...</p>
-            </div>
+            <div id="members-container"></div>
         </div>
 
         <!-- 4. NOTICES VIEW -->
@@ -375,9 +365,7 @@
             <button class="btn btn-green" onclick="openModal('add-notice-modal')">
                 <i class="fa-solid fa-bullhorn"></i> নতুন নোটিশ প্রকাশ করুন
             </button>
-            <div id="notices-container">
-                <p style="text-align:center; color:#888; padding:20px;">নোটিশ লোড হচ্ছে...</p>
-            </div>
+            <div id="notices-container"></div>
         </div>
 
         <!-- 5. PROFILE VIEW -->
@@ -456,9 +444,9 @@
                         <label>গ্যালারি থেকে ছবি আপলোড করুন</label>
                         <div class="file-upload-box" onclick="document.getElementById('post-file').click()">
                             <i class="fa-solid fa-camera"></i>
-                            <div style="font-size:12px; color:#aaa; margin-top:4px;">ছবি বেছে নিতে এখানে চাপুন</div>
+                            <div style="font-size:12px; color:#aaa; margin-top:4px;">ছবি বেছে নিতে চাপুন</div>
                         </div>
-                        <input type="file" id="post-file" accept="image/*" onchange="previewImage(this, 'post-preview')" style="display:none;">
+                        <input type="file" id="post-file" accept="image/*" onchange="previewPostFile(this)" style="display:none;">
                         <img id="post-preview" class="preview-box" alt="Preview">
                     </div>
                     <button type="submit" class="btn btn-primary">সবার কাছে প্রকাশ করুন</button>
@@ -479,7 +467,7 @@
                         <input type="text" id="video-title" required placeholder="শিরোনাম লিখুন">
                     </div>
                     <div class="form-group">
-                        <label>গ্যালারি থেকে ভিডিও ফাইল</label>
+                        <label>গ্যালারি থেকে ভিডিও ফাইল বেছে নিন</label>
                         <div class="file-upload-box" onclick="document.getElementById('video-file').click()">
                             <i class="fa-solid fa-video"></i>
                             <div style="font-size:12px; color:#aaa; margin-top:4px;">ভিডিও বেছে নিতে চাপুন</div>
@@ -526,7 +514,7 @@
                             <i class="fa-solid fa-user-gear"></i>
                             <div style="font-size:12px; color:#aaa; margin-top:4px;">ছবি বেছে নিতে চাপুন</div>
                         </div>
-                        <input type="file" id="profile-file" accept="image/*" onchange="previewImage(this, 'profile-preview')" style="display:none;">
+                        <input type="file" id="profile-file" accept="image/*" onchange="previewProfileFile(this)" style="display:none;">
                         <img id="profile-preview" class="preview-box" alt="Profile Preview">
                     </div>
                     <div class="form-group"><label>নাম</label><input type="text" id="input-name" required></div>
@@ -604,16 +592,46 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT & CLOUD SYNC -->
+    <!-- JAVASCRIPT & FAST DATA HANDLING -->
     <script>
-        // Firebase Config (Public Realtime Database for Al-Khidmah)
-        const firebaseConfig = {
-            databaseURL: "https://alkhidmah-foundation-default-rtdb.firebaseio.com/"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        let currentPostBase64 = "", currentProfileBase64 = "";
 
-        let postBase64 = "", profileBase64 = "";
+        const defaultPosts = [
+            { id: 1, author: "আল-খিদমাহ এডমিন", title: "স্বাগতম!", content: "আল-খিদমাহ ছাত্র ফাউন্ডেশন-এর অফিশিয়াল প্ল্যাটফর্মে আপনাকে স্বাগতম।", date: "আজ" }
+        ];
+
+        const defaultMembers = [
+            { id: 1, name: "মোঃ শামীম", role: "সম্মানিত কার্যকরী সদস্য" },
+            { id: 2, name: "আব্দুল্লাহ আল মামুন", role: "সাধারণ সম্পাদক" }
+        ];
+
+        const defaultNotices = [
+            { id: 1, title: "বিশেষ সাধারণ সভা", content: "📢 আগামী শুক্রবার বিকেল ৪টায় আমাদের সাধারণ সভা অনুষ্ঠিত হবে।" }
+        ];
+
+        // Compress image to fast lightweight Base64 string so phone high-res photos don't hang
+        function compressAndConvertImage(file, maxWidth, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
 
         function switchPage(pageId, btnElement) {
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
@@ -625,43 +643,46 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Preview Gallery Image Selection
-        function previewImage(input, previewId) {
-            const file = input.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById(previewId);
-                    img.src = e.target.result;
+        function previewPostFile(input) {
+            if(input.files && input.files[0]) {
+                compressAndConvertImage(input.files[0], 800, function(base64) {
+                    currentPostBase64 = base64;
+                    const img = document.getElementById('post-preview');
+                    img.src = base64;
                     img.style.display = 'block';
-                    if(previewId === 'post-preview') postBase64 = e.target.result;
-                    if(previewId === 'profile-preview') profileBase64 = e.target.result;
-                };
-                reader.readAsDataURL(file);
+                });
             }
         }
 
-        // --- REALTIME SYNC FUNCTIONS ---
+        function previewProfileFile(input) {
+            if(input.files && input.files[0]) {
+                compressAndConvertImage(input.files[0], 400, function(base64) {
+                    currentProfileBase64 = base64;
+                    const img = document.getElementById('profile-preview');
+                    img.src = base64;
+                    img.style.display = 'block';
+                });
+            }
+        }
 
-        // 1. Posts Sync Across All Devices
-        db.ref('posts').on('value', (snapshot) => {
-            const postsContainer = document.getElementById('posts-container');
-            const data = snapshot.val();
-            if (!data) {
-                postsContainer.innerHTML = `<div class="card-box"><h3>কোনো পোস্ট নেই</h3><p>প্রথম পোস্টটি আপনিই গ্যালারি থেকে ছবি বেছে নিয়ে করুন!</p></div>`;
+        // Render Posts
+        function renderPosts() {
+            const container = document.getElementById('posts-container');
+            const posts = JSON.parse(localStorage.getItem('app_posts')) || defaultPosts;
+            if(!posts || posts.length === 0) {
+                container.innerHTML = `<div class="card-box"><h3>কোনো পোস্ট নেই</h3><p>প্রথম পোস্টটি গ্যালারি থেকে ছবি বেছে নিয়ে করুন!</p></div>`;
                 return;
             }
-            const postsList = Object.values(data).reverse();
-            postsContainer.innerHTML = postsList.map(p => `
+            container.innerHTML = posts.map(p => `
                 <div class="card-box">
                     <div class="post-author"><i class="fa-solid fa-user"></i> ${p.author || 'সদস্য'}</div>
-                    <div class="post-time"><i class="fa-regular fa-clock"></i> ${p.date}</div>
+                    <div class="post-time"><i class="fa-regular fa-clock"></i> ${p.date || 'সাম্প্রতিক'}</div>
                     <h3>${p.title}</h3>
                     <p>${p.content}</p>
                     ${p.img ? `<img src="${p.img}" class="post-img">` : ''}
                 </div>
             `).join('');
-        });
+        }
 
         function submitPost(e) {
             e.preventDefault();
@@ -669,31 +690,30 @@
             const title = document.getElementById('post-title').value;
             const content = document.getElementById('post-content').value;
 
-            db.ref('posts').push({
+            const posts = JSON.parse(localStorage.getItem('app_posts')) || defaultPosts;
+            posts.unshift({
+                id: Date.now(),
                 author: author,
                 title: title,
                 content: content,
-                img: postBase64,
+                img: currentPostBase64,
                 date: new Date().toLocaleDateString('bn-BD')
             });
 
-            postBase64 = "";
+            localStorage.setItem('app_posts', JSON.stringify(posts));
+            currentPostBase64 = "";
             document.getElementById('post-preview').style.display = 'none';
+            renderPosts();
             closeModal('add-post-modal');
             e.target.reset();
-            alert('আপনার পোস্টটি সফলভাবে সবার জন্য প্রকাশিত হয়েছে!');
+            alert('আপনার পোস্টটি সফলভাবে জমা নেওয়া হয়েছে!');
         }
 
-        // 2. Members Sync Across All Devices
-        db.ref('members').on('value', (snapshot) => {
-            const membersContainer = document.getElementById('members-container');
-            const data = snapshot.val();
-            if (!data) {
-                membersContainer.innerHTML = `<p style="text-align:center; color:#888;">কোনো সদস্য নেই</p>`;
-                return;
-            }
-            const membersList = Object.values(data);
-            membersContainer.innerHTML = membersList.map(m => `
+        // Render Members
+        function renderMembers() {
+            const container = document.getElementById('members-container');
+            const members = JSON.parse(localStorage.getItem('app_members')) || defaultMembers;
+            container.innerHTML = members.map(m => `
                 <div class="member-card">
                     <div class="member-avatar">
                         ${m.photo ? `<img src="${m.photo}">` : `<i class="fa-solid fa-user"></i>`}
@@ -704,7 +724,7 @@
                     </div>
                 </div>
             `).join('');
-        });
+        }
 
         function submitSignup(e) {
             e.preventDefault();
@@ -713,77 +733,79 @@
             const photoFile = document.getElementById('signup-photo').files[0];
 
             if(photoFile) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    db.ref('members').push({ name: name, role: role, photo: evt.target.result });
+                compressAndConvertImage(photoFile, 300, function(base64) {
+                    const members = JSON.parse(localStorage.getItem('app_members')) || defaultMembers;
+                    members.push({ id: Date.now(), name: name, role: role, photo: base64 });
+                    localStorage.setItem('app_members', JSON.stringify(members));
+                    renderMembers();
                     closeModal('signup-modal');
                     alert('অভিনন্দন! সদস্য তালিকায় আপনার নাম যুক্ত করা হয়েছে।');
                     e.target.reset();
-                };
-                reader.readAsDataURL(photoFile);
+                });
             }
         }
 
-        // 3. Notices Sync
-        db.ref('notices').on('value', (snapshot) => {
-            const noticesContainer = document.getElementById('notices-container');
-            const data = snapshot.val();
-            if(!data) {
-                noticesContainer.innerHTML = `<div class="card-box"><h3>কোনো নোটিশ নেই</h3></div>`;
-                return;
-            }
-            const list = Object.values(data).reverse();
-            noticesContainer.innerHTML = list.map(n => `
+        // Render Notices
+        function renderNotices() {
+            const container = document.getElementById('notices-container');
+            const notices = JSON.parse(localStorage.getItem('app_notices')) || defaultNotices;
+            container.innerHTML = notices.map(n => `
                 <div class="card-box">
                     <h3>${n.title}</h3>
                     <p>${n.content}</p>
                 </div>
             `).join('');
-        });
+        }
 
         function submitNotice(e) {
             e.preventDefault();
             const title = document.getElementById('notice-title').value;
             const content = document.getElementById('notice-content').value;
-            db.ref('notices').push({ title, content });
+            const notices = JSON.parse(localStorage.getItem('app_notices')) || defaultNotices;
+            notices.unshift({ id: Date.now(), title, content });
+            localStorage.setItem('app_notices', JSON.stringify(notices));
+            renderNotices();
             closeModal('add-notice-modal');
             e.target.reset();
+            alert('নোটিশ প্রকাশিত হয়েছে!');
         }
 
-        // 4. Videos Sync
-        db.ref('videos').on('value', (snapshot) => {
+        // Render Videos
+        function renderVideos() {
             const container = document.getElementById('videos-container');
-            const data = snapshot.val();
-            if(!data) {
-                container.innerHTML = `<div class="card-box"><h3>কোনো ভিডিও নেই</h3></div>`;
+            const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
+            if(videos.length === 0) {
+                container.innerHTML = `<div class="card-box"><h3>কোনো ভিডিও নেই</h3><p>গ্যালারি থেকে নতুন ভিডিও আপলোড করুন।</p></div>`;
                 return;
             }
-            const list = Object.values(data).reverse();
-            container.innerHTML = list.map(v => `
+            container.innerHTML = videos.map(v => `
                 <div class="card-box">
                     <h3>${v.title}</h3>
                     <video src="${v.url}" controls class="post-video"></video>
                 </div>
             `).join('');
-        });
+        }
 
         function submitVideo(e) {
             e.preventDefault();
             const title = document.getElementById('video-title').value;
             const videoFile = document.getElementById('video-file').files[0];
-            if(!videoFile) return alert('ভিডিও সিলেক্ট করুন!');
+            if(!videoFile) return alert('গ্যালারি থেকে একটি ভিডিও বেছে নিন!');
 
             const reader = new FileReader();
             reader.onload = function(evt) {
-                db.ref('videos').push({ title: title, url: evt.target.result });
+                const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
+                videos.unshift({ id: Date.now(), title: title, url: evt.target.result });
+                localStorage.setItem('app_videos', JSON.stringify(videos));
+                renderVideos();
                 closeModal('add-video-modal');
                 e.target.reset();
-                alert('ভিডিও সবার দেখার জন্য আপলোড হয়েছে!');
+                alert('ভিডিও আপলোড সম্পন্ন হয়েছে!');
             };
             reader.readAsDataURL(videoFile);
         }
 
-        // 5. Profile Edit & Gallery Photo Upload Logic
+        // Profile Update
         function openEditModal() {
             document.getElementById('input-name').value = document.getElementById('view-name').innerText;
             document.getElementById('input-designation').value = document.getElementById('view-designation').innerText;
@@ -816,23 +838,30 @@
             document.getElementById('view-blood').innerText = blood;
             document.getElementById('view-year').innerText = year;
 
-            if(profileBase64) {
-                document.getElementById('profile-avatar-img').src = profileBase64;
+            let finalPhoto = document.getElementById('profile-avatar-img').src;
+            if(currentProfileBase64) {
+                finalPhoto = currentProfileBase64;
+                document.getElementById('profile-avatar-img').src = currentProfileBase64;
             }
 
-            localStorage.setItem('userProfileData', JSON.stringify({
-                name, designation, profession, education, address, phone, blood, year, photo: profileBase64 || document.getElementById('profile-avatar-img').src
+            localStorage.setItem('app_profile', JSON.stringify({
+                name, designation, profession, education, address, phone, blood, year, photo: finalPhoto
             }));
 
             closeModal('edit-modal');
-            alert('আপনার প্রোফাইল ছবি ও তথ্য সফলভাবে আপডেট হয়েছে!');
+            alert('আপনার প্রোফাইল তথ্য ও ছবি সফলভাবে আপডেট হয়েছে!');
         }
 
-        // Load Saved Profile Data Locally
+        // Load Everything On App Startup
         window.onload = function() {
-            const saved = localStorage.getItem('userProfileData');
-            if(saved) {
-                const data = JSON.parse(saved);
+            renderPosts();
+            renderMembers();
+            renderNotices();
+            renderVideos();
+
+            const savedProfile = localStorage.getItem('app_profile');
+            if(savedProfile) {
+                const data = JSON.parse(savedProfile);
                 document.getElementById('view-name').innerText = data.name;
                 document.getElementById('view-designation').innerText = data.designation;
                 document.getElementById('view-profession').innerText = data.profession;
