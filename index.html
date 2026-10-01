@@ -29,6 +29,8 @@
             padding-bottom: 80px;
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .top-bar {
             background-color: #024423;
@@ -64,7 +66,7 @@
         }
         .sub-header {
             background: linear-gradient(180deg, #024423 0%, #046a38 100%);
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             border-bottom-left-radius: 16px;
             border-bottom-right-radius: 16px;
@@ -83,6 +85,7 @@
         .page-view {
             display: none;
             padding: 10px 15px;
+            flex: 1;
         }
         .page-view.active {
             display: block;
@@ -145,44 +148,99 @@
             margin-bottom: 6px;
         }
 
-        .member-card {
+        /* ---------------- MESSENGER / CHAT STYLES ---------------- */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 180px);
+            background-color: #14161f;
+            border-radius: 12px;
+            border: 1px solid #1f2430;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #046a38;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 12px;
-            background-color: #14161f;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #1f2430;
+            gap: 8px;
+            color: #fff;
         }
-        .member-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+        .chat-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+        }
+        .message-bubble.other {
+            background-color: #242b3d;
+            color: #fff;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .message-bubble.my {
             background-color: #046a38;
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .message-sender {
+            font-size: 10px;
+            color: #fbbf24;
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+        .message-time {
+            font-size: 9px;
+            color: #9ca3af;
+            text-align: right;
+            margin-top: 4px;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 8px;
+            background-color: #090a0e;
+            border-top: 1px solid #1f2430;
+            gap: 8px;
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 20px;
+            border: 1px solid #2a2e3d;
+            background-color: #14161f;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+        }
+        .send-btn {
+            background-color: #fbbf24;
+            color: #000;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-weight: bold;
-            font-size: 18px;
-            overflow: hidden;
-            border: 2px solid #fbbf24;
-        }
-        .member-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .member-info h4 {
-            font-size: 14px;
-            color: #fff;
-        }
-        .member-info p {
-            font-size: 11px;
-            color: #fbbf24;
+            cursor: pointer;
+            font-size: 16px;
         }
 
+        /* ---------------- PROFILE CARD ---------------- */
         .profile-card {
             background-color: #14161f;
             padding: 20px 15px;
@@ -343,21 +401,31 @@
             <div id="posts-container"></div>
         </div>
 
-        <!-- 2. VIDEO / NEWS VIEW -->
+        <!-- 2. VIDEO / NEWS VIEW (FIXED) -->
         <div id="page-video" class="page-view">
             <button class="btn btn-green" onclick="openModal('add-video-modal')">
-                <i class="fa-solid fa-file-video"></i> গ্যালারি থেকে ভিডিও আপলোড করুন
+                <i class="fa-solid fa-file-video"></i> ভিডিও আপলোড / লিংক যুক্ত করুন
             </button>
             <div id="videos-container"></div>
         </div>
 
-        <!-- 3. MEMBERS VIEW -->
-        <div id="page-members" class="page-view">
-            <div class="card-box" style="margin-bottom: 10px;">
-                <h3>সকল সদস্যদের তালিকা</h3>
-                <p>ফাউন্ডেশনের নিবন্ধিত সদস্যবৃন্দ।</p>
+        <!-- 3. MESSENGER / CHAT ROOM (NEW MESSENGER SYSTEM) -->
+        <div id="page-chat" class="page-view">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>আল-খিদমাহ মেসেঞ্জার (লাইভ চ্যাট)</span>
+                </div>
+                <div id="chat-messages" class="chat-messages">
+                    <!-- Chat messages render here -->
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-text" placeholder="মেসেজ লিখুন..." onkeypress="handleChatEnter(event)">
+                    <button class="send-btn" onclick="sendChatMessage()">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
             </div>
-            <div id="members-container"></div>
         </div>
 
         <!-- 4. NOTICES VIEW -->
@@ -411,11 +479,8 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="openModal('signup-modal')">
-                    <i class="fa-solid fa-user-plus"></i> নতুন অ্যাকাউন্ট সাইন-আপ করুন
-                </button>
                 <button class="btn btn-secondary" onclick="openEditModal()">
-                    <i class="fa-solid fa-user-pen"></i> গ্যালারি থেকে ছবি ও তথ্য আপডেট করুন
+                    <i class="fa-solid fa-user-pen"></i> প্রোফাইল ছবি ও তথ্য আপডেট করুন
                 </button>
             </div>
         </div>
@@ -454,11 +519,11 @@
             </div>
         </div>
 
-        <!-- MODAL: ADD VIDEO -->
+        <!-- MODAL: ADD VIDEO (FIXED) -->
         <div id="add-video-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title">গ্যালারি থেকে ভিডিও আপলোড</span>
+                    <span class="modal-title">ভিডিও শেয়ার করুন</span>
                     <button class="close-btn" onclick="closeModal('add-video-modal')">&times;</button>
                 </div>
                 <form onsubmit="submitVideo(event)">
@@ -467,14 +532,19 @@
                         <input type="text" id="video-title" required placeholder="শিরোনাম লিখুন">
                     </div>
                     <div class="form-group">
-                        <label>গ্যালারি থেকে ভিডিও ফাইল বেছে নিন</label>
+                        <label>অপশন ১: ভিডিও লিংক (ইউটিউব/ফেসবুক/অনলাইন লিংক)</label>
+                        <input type="url" id="video-url" placeholder="https://youtube.com/watch?v=...">
+                    </div>
+                    <div style="text-align:center; color:#888; font-size:12px; margin:5px 0;">— অথবা —</div>
+                    <div class="form-group">
+                        <label>অপশন ২: মোবাইল গ্যালারি থেকে ভিডিও সিলেক্ট করুন</label>
                         <div class="file-upload-box" onclick="document.getElementById('video-file').click()">
                             <i class="fa-solid fa-video"></i>
-                            <div style="font-size:12px; color:#aaa; margin-top:4px;">ভিডিও বেছে নিতে চাপুন</div>
+                            <div style="font-size:12px; color:#aaa; margin-top:4px;" id="video-file-label">গ্যালারি থেকে ভিডিও বেছে নিন</div>
                         </div>
-                        <input type="file" id="video-file" accept="video/*" style="display:none;">
+                        <input type="file" id="video-file" accept="video/*" onchange="handleVideoFileSelect(this)" style="display:none;">
                     </div>
-                    <button type="submit" class="btn btn-primary">ভিডিও শেয়ার করুন</button>
+                    <button type="submit" class="btn btn-primary">ভিডিও পোস্ট করুন</button>
                 </form>
             </div>
         </div>
@@ -538,35 +608,6 @@
             </div>
         </div>
 
-        <!-- MODAL: SIGN UP -->
-        <div id="signup-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="modal-title">নতুন সদস্য সাইন-আপ</span>
-                    <button class="close-btn" onclick="closeModal('signup-modal')">&times;</button>
-                </div>
-                <form onsubmit="submitSignup(event)">
-                    <div class="form-group">
-                        <label>আপনার পূর্ণ নাম</label>
-                        <input type="text" id="signup-name" placeholder="নাম লিখুন" required>
-                    </div>
-                    <div class="form-group">
-                        <label>পদবী / পরিচয়</label>
-                        <input type="text" id="signup-role" placeholder="যেমন: সাধারণ সদস্য" required>
-                    </div>
-                    <div class="form-group">
-                        <label>গ্যালারি থেকে ছবি সিলেক্ট করুন</label>
-                        <input type="file" id="signup-photo" accept="image/*" required>
-                    </div>
-                    <div class="form-group">
-                        <label>মোবাইল নম্বর</label>
-                        <input type="tel" placeholder="০১৭XXXXXXXX" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">রেজিস্ট্রেশন করুন</button>
-                </form>
-            </div>
-        </div>
-
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
             <button class="nav-item active" onclick="switchPage('home', this)">
@@ -575,11 +616,11 @@
             </button>
             <button class="nav-item" onclick="switchPage('video', this)">
                 <i class="fa-solid fa-circle-play"></i>
-                <span>ভিডিও/সংবাদ</span>
+                <span>ভিডিও</span>
             </button>
-            <button class="nav-item" onclick="switchPage('members', this)">
-                <i class="fa-solid fa-users"></i>
-                <span>সদস্যবৃন্দ</span>
+            <button class="nav-item" onclick="switchPage('chat', this)">
+                <i class="fa-solid fa-comments"></i>
+                <span>মেসেঞ্জার</span>
             </button>
             <button class="nav-item" onclick="switchPage('notices', this)">
                 <i class="fa-solid fa-bullhorn"></i>
@@ -592,24 +633,23 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT & FAST DATA HANDLING -->
+    <!-- JAVASCRIPT -->
     <script>
-        let currentPostBase64 = "", currentProfileBase64 = "";
+        let currentPostBase64 = "", currentProfileBase64 = "", selectedVideoBlobUrl = "";
 
         const defaultPosts = [
             { id: 1, author: "আল-খিদমাহ এডমিন", title: "স্বাগতম!", content: "আল-খিদমাহ ছাত্র ফাউন্ডেশন-এর অফিশিয়াল প্ল্যাটফর্মে আপনাকে স্বাগতম।", date: "আজ" }
         ];
 
-        const defaultMembers = [
-            { id: 1, name: "মোঃ শামীম", role: "সম্মানিত কার্যকরী সদস্য" },
-            { id: 2, name: "আব্দুল্লাহ আল মামুন", role: "সাধারণ সম্পাদক" }
+        const defaultMessages = [
+            { id: 1, sender: "মোঃ শামীম", text: "আসসালামু আলাইকুম! আল-খিদমাহ মেসেঞ্জারে সবাইকে স্বাগতম।", time: "10:00 AM", isMy: false },
+            { id: 2, sender: "এডমিন", text: "ওয়া আলাইকুমুস সালাম। সবাই কেমন আছেন?", time: "10:02 AM", isMy: true }
         ];
 
         const defaultNotices = [
             { id: 1, title: "বিশেষ সাধারণ সভা", content: "📢 আগামী শুক্রবার বিকেল ৪টায় আমাদের সাধারণ সভা অনুষ্ঠিত হবে।" }
         ];
 
-        // Compress image to fast lightweight Base64 string so phone high-res photos don't hang
         function compressAndConvertImage(file, maxWidth, callback) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -638,6 +678,9 @@
             document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             btnElement.classList.add('active');
+            if(pageId === 'chat') {
+                renderMessages();
+            }
         }
 
         function openModal(id) { document.getElementById(id).classList.add('active'); }
@@ -665,14 +708,18 @@
             }
         }
 
+        function handleVideoFileSelect(input) {
+            if(input.files && input.files[0]) {
+                const file = input.files[0];
+                selectedVideoBlobUrl = URL.createObjectURL(file);
+                document.getElementById('video-file-label').innerText = "ভিডিও সিলেক্ট করা হয়েছে: " + file.name.substring(0, 18) + '...';
+            }
+        }
+
         // Render Posts
         function renderPosts() {
             const container = document.getElementById('posts-container');
             const posts = JSON.parse(localStorage.getItem('app_posts')) || defaultPosts;
-            if(!posts || posts.length === 0) {
-                container.innerHTML = `<div class="card-box"><h3>কোনো পোস্ট নেই</h3><p>প্রথম পোস্টটি গ্যালারি থেকে ছবি বেছে নিয়ে করুন!</p></div>`;
-                return;
-            }
             container.innerHTML = posts.map(p => `
                 <div class="card-box">
                     <div class="post-author"><i class="fa-solid fa-user"></i> ${p.author || 'সদস্য'}</div>
@@ -709,39 +756,52 @@
             alert('আপনার পোস্টটি সফলভাবে জমা নেওয়া হয়েছে!');
         }
 
-        // Render Members
-        function renderMembers() {
-            const container = document.getElementById('members-container');
-            const members = JSON.parse(localStorage.getItem('app_members')) || defaultMembers;
-            container.innerHTML = members.map(m => `
-                <div class="member-card">
-                    <div class="member-avatar">
-                        ${m.photo ? `<img src="${m.photo}">` : `<i class="fa-solid fa-user"></i>`}
+        // ---------------- MESSENGER LOGIC ----------------
+        function renderMessages() {
+            const container = document.getElementById('chat-messages');
+            const messages = JSON.parse(localStorage.getItem('app_chat_messages')) || defaultMessages;
+            const currentUserName = document.getElementById('view-name').innerText;
+
+            container.innerHTML = messages.map(m => {
+                const isMyMessage = (m.sender === currentUserName) || m.isMy;
+                return `
+                    <div class="message-bubble ${isMyMessage ? 'my' : 'other'}">
+                        <div class="message-sender">${m.sender}</div>
+                        <div>${m.text}</div>
+                        <div class="message-time">${m.time}</div>
                     </div>
-                    <div class="member-info">
-                        <h4>${m.name}</h4>
-                        <p>${m.role}</p>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+
+            container.scrollTop = container.scrollHeight;
         }
 
-        function submitSignup(e) {
-            e.preventDefault();
-            const name = document.getElementById('signup-name').value;
-            const role = document.getElementById('signup-role').value;
-            const photoFile = document.getElementById('signup-photo').files[0];
+        function sendChatMessage() {
+            const input = document.getElementById('chat-text');
+            const text = input.value.trim();
+            if(!text) return;
 
-            if(photoFile) {
-                compressAndConvertImage(photoFile, 300, function(base64) {
-                    const members = JSON.parse(localStorage.getItem('app_members')) || defaultMembers;
-                    members.push({ id: Date.now(), name: name, role: role, photo: base64 });
-                    localStorage.setItem('app_members', JSON.stringify(members));
-                    renderMembers();
-                    closeModal('signup-modal');
-                    alert('অভিনন্দন! সদস্য তালিকায় আপনার নাম যুক্ত করা হয়েছে।');
-                    e.target.reset();
-                });
+            const currentUserName = document.getElementById('view-name').innerText || "সদস্য";
+            const messages = JSON.parse(localStorage.getItem('app_chat_messages')) || defaultMessages;
+
+            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            messages.push({
+                id: Date.now(),
+                sender: currentUserName,
+                text: text,
+                time: timeNow,
+                isMy: true
+            });
+
+            localStorage.setItem('app_chat_messages', JSON.stringify(messages));
+            input.value = "";
+            renderMessages();
+        }
+
+        function handleChatEnter(e) {
+            if(e.key === 'Enter') {
+                sendChatMessage();
             }
         }
 
@@ -770,39 +830,53 @@
             alert('নোটিশ প্রকাশিত হয়েছে!');
         }
 
-        // Render Videos
+        // Render Videos (Fixed Version)
         function renderVideos() {
             const container = document.getElementById('videos-container');
             const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
             if(videos.length === 0) {
-                container.innerHTML = `<div class="card-box"><h3>কোনো ভিডিও নেই</h3><p>গ্যালারি থেকে নতুন ভিডিও আপলোড করুন।</p></div>`;
+                container.innerHTML = `<div class="card-box"><h3>কোনো ভিডিও নেই</h3><p>গ্যালারি থেকে বা লিংক পেস্ট করে নতুন ভিডিও শেয়ার করুন।</p></div>`;
                 return;
             }
             container.innerHTML = videos.map(v => `
                 <div class="card-box">
                     <h3>${v.title}</h3>
-                    <video src="${v.url}" controls class="post-video"></video>
+                    ${v.url.includes('youtube.com') || v.url.includes('youtu.be') ? 
+                        `<iframe width="100%" height="220" style="border-radius:8px; margin-top:8px;" src="${getEmbedYoutubeUrl(v.url)}" frameborder="0" allowfullscreen></iframe>` : 
+                        `<video src="${v.url}" controls class="post-video"></video>`
+                    }
                 </div>
             `).join('');
+        }
+
+        function getEmbedYoutubeUrl(url) {
+            let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            let match = url.match(regExp);
+            return (match && match[2].length === 11) ? "https://www.youtube.com/embed/" + match[2] : url;
         }
 
         function submitVideo(e) {
             e.preventDefault();
             const title = document.getElementById('video-title').value;
-            const videoFile = document.getElementById('video-file').files[0];
-            if(!videoFile) return alert('গ্যালারি থেকে একটি ভিডিও বেছে নিন!');
+            const videoUrlInput = document.getElementById('video-url').value.trim();
 
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
-                videos.unshift({ id: Date.now(), title: title, url: evt.target.result });
-                localStorage.setItem('app_videos', JSON.stringify(videos));
-                renderVideos();
-                closeModal('add-video-modal');
-                e.target.reset();
-                alert('ভিডিও আপলোড সম্পন্ন হয়েছে!');
-            };
-            reader.readAsDataURL(videoFile);
+            let finalVideoSource = videoUrlInput || selectedVideoBlobUrl;
+
+            if(!finalVideoSource) {
+                alert('অনুগ্রহ করে ভিডিও লিংক অথবা গ্যালারি থেকে ভিডিও ফাইল সিলেক্ট করুন!');
+                return;
+            }
+
+            const videos = JSON.parse(localStorage.getItem('app_videos')) || [];
+            videos.unshift({ id: Date.now(), title: title, url: finalVideoSource });
+            localStorage.setItem('app_videos', JSON.stringify(videos));
+
+            selectedVideoBlobUrl = "";
+            document.getElementById('video-file-label').innerText = "গ্যালারি থেকে ভিডিও বেছে নিন";
+            renderVideos();
+            closeModal('add-video-modal');
+            e.target.reset();
+            alert('ভিডিও সফলভাবে প্রকাশিত হয়েছে!');
         }
 
         // Profile Update
@@ -852,12 +926,12 @@
             alert('আপনার প্রোফাইল তথ্য ও ছবি সফলভাবে আপডেট হয়েছে!');
         }
 
-        // Load Everything On App Startup
+        // On App Startup
         window.onload = function() {
             renderPosts();
-            renderMembers();
             renderNotices();
             renderVideos();
+            renderMessages();
 
             const savedProfile = localStorage.getItem('app_profile');
             if(savedProfile) {
