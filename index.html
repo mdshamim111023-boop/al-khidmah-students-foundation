@@ -6,6 +6,11 @@
     <title>Al-Khidmah Students Foundation</title>
     <!-- FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Firebase SDK (Realtime Public Data Sync) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -29,7 +34,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
             min-height: 100vh;
         }
-        /* Top Header */
         .top-bar {
             background-color: #024423;
             padding: 12px 16px;
@@ -80,7 +84,6 @@
             gap: 6px;
         }
 
-        /* Views */
         .page-view {
             display: none;
             padding: 10px 15px;
@@ -89,7 +92,6 @@
             display: block;
         }
 
-        /* Buttons */
         .btn {
             width: 100%;
             padding: 12px;
@@ -110,7 +112,6 @@
         .btn-green { background-color: #046a38; color: #fff; }
         .btn:active { opacity: 0.8; }
 
-        /* Card Box */
         .card-box {
             background-color: #14161f;
             padding: 15px;
@@ -136,13 +137,18 @@
             max-height: 300px;
             object-fit: cover;
         }
+        .post-author {
+            font-size: 11px;
+            color: #fbbf24;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
         .post-time {
             font-size: 10px;
             color: #6b7280;
             margin-bottom: 6px;
         }
 
-        /* Member Item */
         .member-card {
             display: flex;
             align-items: center;
@@ -154,8 +160,8 @@
             border: 1px solid #1f2430;
         }
         .member-avatar {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background-color: #046a38;
             display: flex;
@@ -164,6 +170,13 @@
             color: #fff;
             font-weight: bold;
             font-size: 18px;
+            overflow: hidden;
+            border: 2px solid #fbbf24;
+        }
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .member-info h4 {
             font-size: 14px;
@@ -174,7 +187,6 @@
             color: #fbbf24;
         }
 
-        /* Profile Card */
         .profile-card {
             background-color: #14161f;
             padding: 20px 15px;
@@ -183,9 +195,10 @@
             text-align: center;
         }
         .avatar-container {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             margin: 0 auto 12px;
+            position: relative;
         }
         .avatar {
             width: 100%;
@@ -218,7 +231,6 @@
         .info-label { width: 100px; color: #9ca3af; }
         .info-value { color: #ffffff; font-weight: 500; }
 
-        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -245,7 +257,6 @@
         .nav-item.active { color: #fbbf24; }
         .nav-item i { font-size: 16px; margin-bottom: 4px; }
 
-        /* Modals */
         .modal {
             display: none;
             position: fixed;
@@ -289,26 +300,22 @@
             color: #fff;
             font-size: 13px;
         }
-        .file-input-wrapper {
-            background-color: #090a0e;
-            border: 1px dashed #046a38;
-            padding: 12px;
+        .file-upload-box {
+            border: 2px dashed #046a38;
+            padding: 15px;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            margin-top: 5px;
+            background: #090a0e;
         }
-        .file-input-wrapper i {
-            font-size: 24px;
-            color: #fbbf24;
-            margin-bottom: 6px;
-        }
-        .preview-img {
-            max-width: 100%;
+        .file-upload-box i { font-size: 24px; color: #fbbf24; }
+        .preview-box {
+            width: 100%;
             max-height: 150px;
-            border-radius: 6px;
+            border-radius: 8px;
             margin-top: 10px;
             display: none;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -337,7 +344,9 @@
             <button class="btn btn-green" onclick="openModal('add-post-modal')">
                 <i class="fa-solid fa-image"></i> গ্যালারি থেকে ছবিসহ পোস্ট করুন
             </button>
-            <div id="posts-container"></div>
+            <div id="posts-container">
+                <p style="text-align:center; color:#888; padding:20px;">পোস্ট লোড হচ্ছে...</p>
+            </div>
         </div>
 
         <!-- 2. VIDEO / NEWS VIEW -->
@@ -345,16 +354,20 @@
             <button class="btn btn-green" onclick="openModal('add-video-modal')">
                 <i class="fa-solid fa-file-video"></i> গ্যালারি থেকে ভিডিও আপলোড করুন
             </button>
-            <div id="videos-container"></div>
+            <div id="videos-container">
+                <p style="text-align:center; color:#888; padding:20px;">ভিডিও লোড হচ্ছে...</p>
+            </div>
         </div>
 
         <!-- 3. MEMBERS VIEW -->
         <div id="page-members" class="page-view">
             <div class="card-box" style="margin-bottom: 10px;">
                 <h3>সকল সদস্যদের তালিকা</h3>
-                <p>ফাউন্ডেশনের নিবন্ধিত কার্যনির্বাহী ও সাধারণ সদস্যবৃন্দ।</p>
+                <p>ফাউন্ডেশনের নিবন্ধিত সদস্যবৃন্দ।</p>
             </div>
-            <div id="members-container"></div>
+            <div id="members-container">
+                <p style="text-align:center; color:#888; padding:20px;">সদস্য তালিকা লোড হচ্ছে...</p>
+            </div>
         </div>
 
         <!-- 4. NOTICES VIEW -->
@@ -362,7 +375,9 @@
             <button class="btn btn-green" onclick="openModal('add-notice-modal')">
                 <i class="fa-solid fa-bullhorn"></i> নতুন নোটিশ প্রকাশ করুন
             </button>
-            <div id="notices-container"></div>
+            <div id="notices-container">
+                <p style="text-align:center; color:#888; padding:20px;">নোটিশ লোড হচ্ছে...</p>
+            </div>
         </div>
 
         <!-- 5. PROFILE VIEW -->
@@ -412,62 +427,66 @@
                     <i class="fa-solid fa-user-plus"></i> নতুন অ্যাকাউন্ট সাইন-আপ করুন
                 </button>
                 <button class="btn btn-secondary" onclick="openEditModal()">
-                    <i class="fa-solid fa-user-pen"></i> প্রোফাইল তথ্য সম্পাদনা করুন
+                    <i class="fa-solid fa-user-pen"></i> গ্যালারি থেকে ছবি ও তথ্য আপডেট করুন
                 </button>
             </div>
         </div>
 
-        <!-- MODAL: ADD POST WITH GALLERY IMAGE -->
+        <!-- MODAL: POST WITH IMAGE -->
         <div id="add-post-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title">গ্যালারি থেকে ছবিসহ পোস্ট করুন</span>
                     <button class="close-btn" onclick="closeModal('add-post-modal')">&times;</button>
                 </div>
-                <form onsubmit="addPost(event)">
+                <form onsubmit="submitPost(event)">
                     <div class="form-group">
-                        <label>পোস্টের শিরোনাম / বিষয়</label>
+                        <label>আপনার নাম (পোস্টদাতার নাম)</label>
+                        <input type="text" id="post-author-name" placeholder="আপনার নাম লিখুন" required>
+                    </div>
+                    <div class="form-group">
+                        <label>পোস্টের বিষয় / শিরোনাম</label>
                         <input type="text" id="post-title" required placeholder="শিরোনাম লিখুন">
                     </div>
                     <div class="form-group">
-                        <label>বিবরণ</label>
+                        <label>বিস্তারিত বিবরণ</label>
                         <textarea id="post-content" rows="3" required placeholder="বিবরণ লিখুন..."></textarea>
                     </div>
                     <div class="form-group">
-                        <label>গ্যালারি থেকে ছবি বেছে নিন</label>
-                        <div class="file-input-wrapper">
-                            <i class="fa-solid fa-cloud-arrow-up"></i>
-                            <div style="font-size:12px; color:#aaa;">ছবি সিলেক্ট করতে এখানে চাপুন</div>
-                            <input type="file" id="post-file" accept="image/*" onchange="previewPostImage(event)" style="display:none;">
+                        <label>গ্যালারি থেকে ছবি আপলোড করুন</label>
+                        <div class="file-upload-box" onclick="document.getElementById('post-file').click()">
+                            <i class="fa-solid fa-camera"></i>
+                            <div style="font-size:12px; color:#aaa; margin-top:4px;">ছবি বেছে নিতে এখানে চাপুন</div>
                         </div>
-                        <img id="post-img-preview" class="preview-img" alt="Preview">
+                        <input type="file" id="post-file" accept="image/*" onchange="previewImage(this, 'post-preview')" style="display:none;">
+                        <img id="post-preview" class="preview-box" alt="Preview">
                     </div>
-                    <button type="submit" class="btn btn-primary">পোস্ট আপলোড করুন</button>
+                    <button type="submit" class="btn btn-primary">সবার কাছে প্রকাশ করুন</button>
                 </form>
             </div>
         </div>
 
-        <!-- MODAL: ADD VIDEO FROM GALLERY -->
+        <!-- MODAL: ADD VIDEO -->
         <div id="add-video-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title">গ্যালারি থেকে ভিডিও পোস্ট করুন</span>
+                    <span class="modal-title">গ্যালারি থেকে ভিডিও আপলোড</span>
                     <button class="close-btn" onclick="closeModal('add-video-modal')">&times;</button>
                 </div>
-                <form onsubmit="addVideo(event)">
+                <form onsubmit="submitVideo(event)">
                     <div class="form-group">
                         <label>ভিডিওর শিরোনাম</label>
                         <input type="text" id="video-title" required placeholder="শিরোনাম লিখুন">
                     </div>
                     <div class="form-group">
-                        <label>গ্যালারি থেকে ভিডিও ফাইল বেছে নিন</label>
-                        <div class="file-input-wrapper">
+                        <label>গ্যালারি থেকে ভিডিও ফাইল</label>
+                        <div class="file-upload-box" onclick="document.getElementById('video-file').click()">
                             <i class="fa-solid fa-video"></i>
-                            <div style="font-size:12px; color:#aaa;">ভিডিও সিলেক্ট করতে এখানে চাপুন</div>
-                            <input type="file" id="video-file" accept="video/*" style="display:none;">
+                            <div style="font-size:12px; color:#aaa; margin-top:4px;">ভিডিও বেছে নিতে চাপুন</div>
                         </div>
+                        <input type="file" id="video-file" accept="video/*" style="display:none;">
                     </div>
-                    <button type="submit" class="btn btn-primary">ভিডিও আপলোড করুন</button>
+                    <button type="submit" class="btn btn-primary">ভিডিও শেয়ার করুন</button>
                 </form>
             </div>
         </div>
@@ -479,31 +498,36 @@
                     <span class="modal-title">নতুন নোটিশ যোগ করুন</span>
                     <button class="close-btn" onclick="closeModal('add-notice-modal')">&times;</button>
                 </div>
-                <form onsubmit="addNotice(event)">
+                <form onsubmit="submitNotice(event)">
                     <div class="form-group">
                         <label>নোটিশের বিষয়</label>
                         <input type="text" id="notice-title" required placeholder="বিষয় লিখুন">
                     </div>
                     <div class="form-group">
                         <label>নোটিশ বিবরণ</label>
-                        <textarea id="notice-content" rows="4" required placeholder="বিস্তারিত নোটিশ লিখুন..."></textarea>
+                        <textarea id="notice-content" rows="4" required placeholder="বিস্তারিত লিখুন..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">প্রকাশ করুন</button>
+                    <button type="submit" class="btn btn-primary">নোটিশ প্রকাশ করুন</button>
                 </form>
             </div>
         </div>
 
-        <!-- MODAL: EDIT PROFILE -->
+        <!-- MODAL: EDIT PROFILE WITH GALLERY PHOTO -->
         <div id="edit-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title">প্রোফাইল সম্পাদনা করুন</span>
+                    <span class="modal-title">প্রোফাইল ছবি ও তথ্য পরিবর্তন</span>
                     <button class="close-btn" onclick="closeModal('edit-modal')">&times;</button>
                 </div>
-                <form onsubmit="saveProfile(event)">
+                <form onsubmit="submitProfile(event)">
                     <div class="form-group">
-                        <label>প্রোফাইল ছবি পরিবর্তন করুন</label>
-                        <input type="file" id="profile-file" accept="image/*">
+                        <label>গ্যালারি থেকে প্রোফাইল ছবি বেছে নিন</label>
+                        <div class="file-upload-box" onclick="document.getElementById('profile-file').click()">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <div style="font-size:12px; color:#aaa; margin-top:4px;">ছবি বেছে নিতে চাপুন</div>
+                        </div>
+                        <input type="file" id="profile-file" accept="image/*" onchange="previewImage(this, 'profile-preview')" style="display:none;">
+                        <img id="profile-preview" class="preview-box" alt="Profile Preview">
                     </div>
                     <div class="form-group"><label>নাম</label><input type="text" id="input-name" required></div>
                     <div class="form-group"><label>পদবী</label><input type="text" id="input-designation" required></div>
@@ -521,7 +545,7 @@
                         </select>
                     </div>
                     <div class="form-group"><label>সদস্যপদ সাল</label><input type="text" id="input-year" required></div>
-                    <button type="submit" class="btn btn-primary">তথ্য সেভ করুন</button>
+                    <button type="submit" class="btn btn-primary">প্রোফাইল সেভ করুন</button>
                 </form>
             </div>
         </div>
@@ -533,7 +557,7 @@
                     <span class="modal-title">নতুন সদস্য সাইন-আপ</span>
                     <button class="close-btn" onclick="closeModal('signup-modal')">&times;</button>
                 </div>
-                <form onsubmit="handleSignup(event)">
+                <form onsubmit="submitSignup(event)">
                     <div class="form-group">
                         <label>আপনার পূর্ণ নাম</label>
                         <input type="text" id="signup-name" placeholder="নাম লিখুন" required>
@@ -543,14 +567,14 @@
                         <input type="text" id="signup-role" placeholder="যেমন: সাধারণ সদস্য" required>
                     </div>
                     <div class="form-group">
-                        <label>মোবাইল নম্বর</label>
-                        <input type="tel" id="signup-phone" placeholder="০১৭XXXXXXXX" required>
+                        <label>গ্যালারি থেকে ছবি সিলেক্ট করুন</label>
+                        <input type="file" id="signup-photo" accept="image/*" required>
                     </div>
                     <div class="form-group">
-                        <label>ইমেইল ঠিকানা</label>
-                        <input type="email" placeholder="example@mail.com" required>
+                        <label>মোবাইল নম্বর</label>
+                        <input type="tel" placeholder="০১৭XXXXXXXX" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">রেজিস্ট্রেশন সম্পন্ন করুন</button>
+                    <button type="submit" class="btn btn-primary">রেজিস্ট্রেশন করুন</button>
                 </form>
             </div>
         </div>
@@ -580,31 +604,16 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT & CLOUD SYNC -->
     <script>
-        // Trigger File Input Click on Wrapper Click
-        document.querySelectorAll('.file-input-wrapper').forEach(wrapper => {
-            wrapper.addEventListener('click', () => {
-                const input = wrapper.querySelector('input[type="file"]');
-                if(input) input.click();
-            });
-        });
+        // Firebase Config (Public Realtime Database for Al-Khidmah)
+        const firebaseConfig = {
+            databaseURL: "https://alkhidmah-foundation-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        const defaultPosts = [
-            { title: "স্বাগতম!", content: "আল-খিদমাহ ছাত্র ফাউন্ডেশন-এর অফিশিয়াল প্ল্যাটফর্মে আপনাকে স্বাগতম। আমাদের উদ্দেশ্য শিক্ষার্থীদের দক্ষতা বৃদ্ধি ও সামাজিক সেবা করা।", date: "আজ" }
-        ];
-
-        const defaultMembers = [
-            { name: "মোঃ শামীম", role: "সম্মানিত কার্যকরী সদস্য" },
-            { name: "আব্দুল্লাহ আল মামুন", role: "সাধারণ সম্পাদক" },
-            { name: "মোহাম্মদ রফিকুল ইসলাম", role: "কার্যকরী সদস্য" }
-        ];
-
-        const defaultNotices = [
-            { title: "বিশেষ সাধারণ সভা", content: "📢 আগামী শুক্রবার বিকেল ৪টায় ফাউন্ডেশনের কার্যালয়ে জরুরি বৈঠক অনুষ্ঠিত হবে।" }
-        ];
-
-        let postImageBase64 = "";
+        let postBase64 = "", profileBase64 = "";
 
         function switchPage(pageId, btnElement) {
             document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
@@ -616,151 +625,165 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        // Preview Selected Post Image
-        function previewPostImage(e) {
-            const file = e.target.files[0];
-            if (file) {
+        // Preview Gallery Image Selection
+        function previewImage(input, previewId) {
+            const file = input.files[0];
+            if(file) {
                 const reader = new FileReader();
-                reader.onload = function(evt) {
-                    postImageBase64 = evt.target.result;
-                    const img = document.getElementById('post-img-preview');
-                    img.src = postImageBase64;
+                reader.onload = function(e) {
+                    const img = document.getElementById(previewId);
+                    img.src = e.target.result;
                     img.style.display = 'block';
+                    if(previewId === 'post-preview') postBase64 = e.target.result;
+                    if(previewId === 'profile-preview') profileBase64 = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        // Render Posts
-        function renderPosts() {
-            const posts = JSON.parse(localStorage.getItem('posts')) || defaultPosts;
-            const container = document.getElementById('posts-container');
-            container.innerHTML = posts.map(p => `
+        // --- REALTIME SYNC FUNCTIONS ---
+
+        // 1. Posts Sync Across All Devices
+        db.ref('posts').on('value', (snapshot) => {
+            const postsContainer = document.getElementById('posts-container');
+            const data = snapshot.val();
+            if (!data) {
+                postsContainer.innerHTML = `<div class="card-box"><h3>কোনো পোস্ট নেই</h3><p>প্রথম পোস্টটি আপনিই গ্যালারি থেকে ছবি বেছে নিয়ে করুন!</p></div>`;
+                return;
+            }
+            const postsList = Object.values(data).reverse();
+            postsContainer.innerHTML = postsList.map(p => `
                 <div class="card-box">
-                    <div class="post-time"><i class="fa-regular fa-clock"></i> ${p.date || 'সাম্প্রতিক'}</div>
+                    <div class="post-author"><i class="fa-solid fa-user"></i> ${p.author || 'সদস্য'}</div>
+                    <div class="post-time"><i class="fa-regular fa-clock"></i> ${p.date}</div>
                     <h3>${p.title}</h3>
                     <p>${p.content}</p>
                     ${p.img ? `<img src="${p.img}" class="post-img">` : ''}
                 </div>
             `).join('');
-        }
+        });
 
-        // Add Post
-        function addPost(e) {
+        function submitPost(e) {
             e.preventDefault();
+            const author = document.getElementById('post-author-name').value;
             const title = document.getElementById('post-title').value;
             const content = document.getElementById('post-content').value;
-            
-            const posts = JSON.parse(localStorage.getItem('posts')) || defaultPosts;
-            posts.unshift({ title, content, img: postImageBase64, date: new Date().toLocaleDateString('bn-BD') });
-            localStorage.setItem('posts', JSON.stringify(posts));
 
-            postImageBase64 = "";
-            document.getElementById('post-img-preview').style.display = 'none';
-            renderPosts();
+            db.ref('posts').push({
+                author: author,
+                title: title,
+                content: content,
+                img: postBase64,
+                date: new Date().toLocaleDateString('bn-BD')
+            });
+
+            postBase64 = "";
+            document.getElementById('post-preview').style.display = 'none';
             closeModal('add-post-modal');
             e.target.reset();
+            alert('আপনার পোস্টটি সফলভাবে সবার জন্য প্রকাশিত হয়েছে!');
         }
 
-        // Render Members
-        function renderMembers() {
-            const members = JSON.parse(localStorage.getItem('members')) || defaultMembers;
-            const container = document.getElementById('members-container');
-            container.innerHTML = members.map(m => `
+        // 2. Members Sync Across All Devices
+        db.ref('members').on('value', (snapshot) => {
+            const membersContainer = document.getElementById('members-container');
+            const data = snapshot.val();
+            if (!data) {
+                membersContainer.innerHTML = `<p style="text-align:center; color:#888;">কোনো সদস্য নেই</p>`;
+                return;
+            }
+            const membersList = Object.values(data);
+            membersContainer.innerHTML = membersList.map(m => `
                 <div class="member-card">
-                    <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                    <div class="member-avatar">
+                        ${m.photo ? `<img src="${m.photo}">` : `<i class="fa-solid fa-user"></i>`}
+                    </div>
                     <div class="member-info">
                         <h4>${m.name}</h4>
                         <p>${m.role}</p>
                     </div>
                 </div>
             `).join('');
+        });
+
+        function submitSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const role = document.getElementById('signup-role').value;
+            const photoFile = document.getElementById('signup-photo').files[0];
+
+            if(photoFile) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    db.ref('members').push({ name: name, role: role, photo: evt.target.result });
+                    closeModal('signup-modal');
+                    alert('অভিনন্দন! সদস্য তালিকায় আপনার নাম যুক্ত করা হয়েছে।');
+                    e.target.reset();
+                };
+                reader.readAsDataURL(photoFile);
+            }
         }
 
-        // Render Notices
-        function renderNotices() {
-            const notices = JSON.parse(localStorage.getItem('notices')) || defaultNotices;
-            const container = document.getElementById('notices-container');
-            container.innerHTML = notices.map(n => `
+        // 3. Notices Sync
+        db.ref('notices').on('value', (snapshot) => {
+            const noticesContainer = document.getElementById('notices-container');
+            const data = snapshot.val();
+            if(!data) {
+                noticesContainer.innerHTML = `<div class="card-box"><h3>কোনো নোটিশ নেই</h3></div>`;
+                return;
+            }
+            const list = Object.values(data).reverse();
+            noticesContainer.innerHTML = list.map(n => `
                 <div class="card-box">
                     <h3>${n.title}</h3>
                     <p>${n.content}</p>
                 </div>
             `).join('');
-        }
+        });
 
-        function addNotice(e) {
+        function submitNotice(e) {
             e.preventDefault();
             const title = document.getElementById('notice-title').value;
             const content = document.getElementById('notice-content').value;
-            
-            const notices = JSON.parse(localStorage.getItem('notices')) || defaultNotices;
-            notices.unshift({ title, content });
-            localStorage.setItem('notices', JSON.stringify(notices));
-
-            renderNotices();
+            db.ref('notices').push({ title, content });
             closeModal('add-notice-modal');
             e.target.reset();
         }
 
-        // Render Videos
-        function renderVideos() {
-            const videos = JSON.parse(localStorage.getItem('videos')) || [];
+        // 4. Videos Sync
+        db.ref('videos').on('value', (snapshot) => {
             const container = document.getElementById('videos-container');
-            if(videos.length === 0) {
-                container.innerHTML = `<div class="card-box"><h3>কোনো ভিডিও নেই</h3><p>গ্যালারি থেকে নতুন ভিডিও আপলোড করুন।</p></div>`;
+            const data = snapshot.val();
+            if(!data) {
+                container.innerHTML = `<div class="card-box"><h3>কোনো ভিডিও নেই</h3></div>`;
                 return;
             }
-            container.innerHTML = videos.map(v => `
+            const list = Object.values(data).reverse();
+            container.innerHTML = list.map(v => `
                 <div class="card-box">
                     <h3>${v.title}</h3>
                     <video src="${v.url}" controls class="post-video"></video>
                 </div>
             `).join('');
-        }
+        });
 
-        // Add Video from Gallery
-        function addVideo(e) {
+        function submitVideo(e) {
             e.preventDefault();
             const title = document.getElementById('video-title').value;
             const videoFile = document.getElementById('video-file').files[0];
-
-            if (!videoFile) {
-                alert('অনুগ্রহ করে গ্যালারি থেকে একটি ভিডিও সিলেক্ট করুন!');
-                return;
-            }
+            if(!videoFile) return alert('ভিডিও সিলেক্ট করুন!');
 
             const reader = new FileReader();
             reader.onload = function(evt) {
-                const videoData = evt.target.result;
-                const videos = JSON.parse(localStorage.getItem('videos')) || [];
-                videos.unshift({ title, url: videoData });
-                localStorage.setItem('videos', JSON.stringify(videos));
-
-                renderVideos();
+                db.ref('videos').push({ title: title, url: evt.target.result });
                 closeModal('add-video-modal');
                 e.target.reset();
+                alert('ভিডিও সবার দেখার জন্য আপলোড হয়েছে!');
             };
             reader.readAsDataURL(videoFile);
         }
 
-        // Handle Signup
-        function handleSignup(e) {
-            e.preventDefault();
-            const name = document.getElementById('signup-name').value;
-            const role = document.getElementById('signup-role').value;
-
-            const members = JSON.parse(localStorage.getItem('members')) || defaultMembers;
-            members.push({ name, role });
-            localStorage.setItem('members', JSON.stringify(members));
-
-            renderMembers();
-            closeModal('signup-modal');
-            alert('আপনার সদস্য সাইন-আপ সম্পন্ন হয়েছে! সদস্য তালিকায় আপনার নাম যুক্ত করা হয়েছে।');
-            e.target.reset();
-        }
-
-        // Edit Profile
+        // 5. Profile Edit & Gallery Photo Upload Logic
         function openEditModal() {
             document.getElementById('input-name').value = document.getElementById('view-name').innerText;
             document.getElementById('input-designation').value = document.getElementById('view-designation').innerText;
@@ -773,7 +796,7 @@
             openModal('edit-modal');
         }
 
-        function saveProfile(e) {
+        function submitProfile(e) {
             e.preventDefault();
             const name = document.getElementById('input-name').value;
             const designation = document.getElementById('input-designation').value;
@@ -783,47 +806,33 @@
             const phone = document.getElementById('input-phone').value;
             const blood = document.getElementById('input-blood').value;
             const year = document.getElementById('input-year').value;
-            const avatarFile = document.getElementById('profile-file').files[0];
 
-            let avatarUrl = document.getElementById('profile-avatar-img').src;
+            document.getElementById('view-name').innerText = name;
+            document.getElementById('view-designation').innerText = designation;
+            document.getElementById('view-profession').innerText = profession;
+            document.getElementById('view-education').innerText = education;
+            document.getElementById('view-address').innerText = address;
+            document.getElementById('view-phone').innerText = phone;
+            document.getElementById('view-blood').innerText = blood;
+            document.getElementById('view-year').innerText = year;
 
-            const updateProfileData = (imgSrc) => {
-                document.getElementById('view-name').innerText = name;
-                document.getElementById('view-designation').innerText = designation;
-                document.getElementById('view-profession').innerText = profession;
-                document.getElementById('view-education').innerText = education;
-                document.getElementById('view-address').innerText = address;
-                document.getElementById('view-phone').innerText = phone;
-                document.getElementById('view-blood').innerText = blood;
-                document.getElementById('view-year').innerText = year;
-                document.getElementById('profile-avatar-img').src = imgSrc;
-
-                localStorage.setItem('userProfile', JSON.stringify({ name, designation, profession, education, address, phone, blood, year, avatar: imgSrc }));
-                closeModal('edit-modal');
-                alert('প্রোফাইল আপডেট হয়েছে!');
-            };
-
-            if (avatarFile) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    updateProfileData(evt.target.result);
-                };
-                reader.readAsDataURL(avatarFile);
-            } else {
-                updateProfileData(avatarUrl);
+            if(profileBase64) {
+                document.getElementById('profile-avatar-img').src = profileBase64;
             }
+
+            localStorage.setItem('userProfileData', JSON.stringify({
+                name, designation, profession, education, address, phone, blood, year, photo: profileBase64 || document.getElementById('profile-avatar-img').src
+            }));
+
+            closeModal('edit-modal');
+            alert('আপনার প্রোফাইল ছবি ও তথ্য সফলভাবে আপডেট হয়েছে!');
         }
 
-        // Initial Load
+        // Load Saved Profile Data Locally
         window.onload = function() {
-            renderPosts();
-            renderMembers();
-            renderNotices();
-            renderVideos();
-
-            const savedProfile = localStorage.getItem('userProfile');
-            if(savedProfile) {
-                const data = JSON.parse(savedProfile);
+            const saved = localStorage.getItem('userProfileData');
+            if(saved) {
+                const data = JSON.parse(saved);
                 document.getElementById('view-name').innerText = data.name;
                 document.getElementById('view-designation').innerText = data.designation;
                 document.getElementById('view-profession').innerText = data.profession;
@@ -832,7 +841,7 @@
                 document.getElementById('view-phone').innerText = data.phone;
                 document.getElementById('view-blood').innerText = data.blood;
                 document.getElementById('view-year').innerText = data.year;
-                if(data.avatar) document.getElementById('profile-avatar-img').src = data.avatar;
+                if(data.photo) document.getElementById('profile-avatar-img').src = data.photo;
             }
         };
     </script>
