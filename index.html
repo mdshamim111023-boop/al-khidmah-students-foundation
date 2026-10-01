@@ -29,7 +29,7 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8);
             min-height: 100vh;
         }
-        /* Top Bar */
+        /* Header */
         .top-bar {
             background-color: #024423;
             padding: 12px 16px;
@@ -62,15 +62,13 @@
             font-size: 11px;
             color: #a7f3d0;
         }
-
-        /* Sub Header Banner */
         .sub-header {
             background: linear-gradient(180deg, #024423 0%, #046a38 100%);
             padding: 12px;
             text-align: center;
             border-bottom-left-radius: 16px;
             border-bottom-right-radius: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .sub-header-title {
             font-size: 12px;
@@ -82,13 +80,96 @@
             gap: 6px;
         }
 
-        /* Page Views */
+        /* Views */
         .page-view {
             display: none;
             padding: 10px 15px;
         }
         .page-view.active {
             display: block;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 12px;
+            border: none;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary { background-color: #f59e0b; color: #000; }
+        .btn-secondary { background-color: #d97706; color: #000; }
+        .btn-green { background-color: #046a38; color: #fff; }
+        .btn:active { opacity: 0.8; }
+
+        /* Card Box */
+        .card-box {
+            background-color: #14161f;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #1f2430;
+        }
+        .card-box h3 {
+            color: #fbbf24;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .card-box p {
+            font-size: 13px;
+            color: #d1d5db;
+            line-height: 1.5;
+        }
+        .post-img {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            max-height: 250px;
+            object-fit: cover;
+        }
+        .post-time {
+            font-size: 10px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+        /* Member Item */
+        .member-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #14161f;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #1f2430;
+        }
+        .member-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: #046a38;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+        }
+        .member-info h4 {
+            font-size: 14px;
+            color: #fff;
+        }
+        .member-info p {
+            font-size: 11px;
+            color: #fbbf24;
         }
 
         /* Profile Card */
@@ -112,11 +193,7 @@
             object-fit: cover;
             background-color: #2a2e3d;
         }
-        .user-name {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
+        .user-name { font-size: 20px; font-weight: bold; margin-bottom: 8px; }
         .badge {
             display: inline-block;
             background-color: rgba(245, 158, 11, 0.15);
@@ -127,12 +204,7 @@
             font-size: 12px;
             margin-bottom: 20px;
         }
-
-        /* Info List */
-        .info-list {
-            text-align: left;
-            margin-bottom: 20px;
-        }
+        .info-list { text-align: left; margin-bottom: 20px; }
         .info-item {
             display: flex;
             align-items: center;
@@ -140,43 +212,9 @@
             border-bottom: 1px solid #1a1e29;
             font-size: 13px;
         }
-        .info-icon {
-            width: 30px;
-            color: #046a38;
-            font-size: 15px;
-        }
-        .info-label {
-            width: 100px;
-            color: #9ca3af;
-        }
-        .info-value {
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        /* Buttons */
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 10px;
-            border: none;
-            transition: 0.2s;
-        }
-        .btn-primary {
-            background-color: #f59e0b;
-            color: #000;
-        }
-        .btn-secondary {
-            background-color: #d97706;
-            color: #000;
-        }
-        .btn:active {
-            opacity: 0.8;
-        }
+        .info-icon { width: 30px; color: #046a38; font-size: 15px; }
+        .info-label { width: 100px; color: #9ca3af; }
+        .info-value { color: #ffffff; font-weight: 500; }
 
         /* Bottom Nav */
         .bottom-nav {
@@ -202,31 +240,22 @@
             background: none;
             border: none;
         }
-        .nav-item.active {
-            color: #fbbf24;
-        }
-        .nav-item i {
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
+        .nav-item.active { color: #fbbf24; }
+        .nav-item i { font-size: 16px; margin-bottom: 4px; }
 
-        /* Modals (Pop-ups) */
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
             z-index: 200;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
         .modal-content {
             background-color: #14161f;
             width: 100%;
@@ -245,29 +274,11 @@
             border-bottom: 1px solid #2a2e3d;
             padding-bottom: 10px;
         }
-        .modal-title {
-            font-size: 16px;
-            color: #fbbf24;
-            font-weight: bold;
-        }
-        .close-btn {
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        .form-group {
-            margin-bottom: 12px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            color: #9ca3af;
-            margin-bottom: 4px;
-        }
-        .form-group input, .form-group select {
+        .modal-title { font-size: 16px; color: #fbbf24; font-weight: bold; }
+        .close-btn { background: none; border: none; color: #aaa; font-size: 18px; cursor: pointer; }
+        .form-group { margin-bottom: 12px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; color: #9ca3af; margin-bottom: 4px; }
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
             padding: 10px;
             border-radius: 6px;
@@ -276,30 +287,25 @@
             color: #fff;
             font-size: 13px;
         }
-        
-        /* Card Boxes for other pages */
-        .card-box {
-            background-color: #14161f;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #1f2430;
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-top: 10px;
         }
-        .card-box h3 {
-            color: #fbbf24;
-            font-size: 15px;
-            margin-bottom: 8px;
-        }
-        .card-box p {
-            font-size: 13px;
-            color: #d1d5db;
-            line-height: 1.5;
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 0;
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Top Bar -->
+        <!-- Top Header -->
         <div class="top-bar">
             <div class="brand-info">
                 <div class="logo"><i class="fa-solid fa-graduation-cap"></i></div>
@@ -310,7 +316,6 @@
             </div>
         </div>
 
-        <!-- Banner -->
         <div class="sub-header">
             <div class="sub-header-title">
                 <i class="fa-solid fa-shield-halved"></i>
@@ -318,44 +323,49 @@
             </div>
         </div>
 
-        <!-- PAGE 1: HOME -->
-        <div id="page-home" class="page-view">
-            <div class="card-box">
-                <h3>স্বাগতম!</h3>
-                <p>আল-খিদমাহ ছাত্র ফাউন্ডেশন-এর অফিসিয়াল প্ল্যাটফর্মে আপনাকে স্বাগতম। আমাদের উদ্দেশ্য শিক্ষার্থীদের দক্ষতা বৃদ্ধি ও সামাজিক সেবা করা।</p>
-            </div>
-            <div class="card-box">
-                <h3>সাম্প্রতিক কার্যক্রম</h3>
-                <p>📌 বার্ষিক সাধারণ সভা ও ছাত্র বৃত্তি প্রদান অনুষ্ঠান শীঘ্রই অনুষ্ঠিত হতে যাচ্ছে।</p>
+        <!-- 1. HOME VIEW -->
+        <div id="page-home" class="page-view active">
+            <button class="btn btn-green" onclick="openModal('add-post-modal')">
+                <i class="fa-solid fa-pen-to-square"></i> নতুন আপডেট / পোস্ট প্রকাশ করুন
+            </button>
+            <div id="posts-container">
+                <!-- Posts will render here -->
             </div>
         </div>
 
-        <!-- PAGE 2: VIDEO / NEWS -->
+        <!-- 2. VIDEO / NEWS VIEW -->
         <div id="page-video" class="page-view">
-            <div class="card-box">
-                <h3>ভিডিও ও সংবাদ</h3>
-                <p>📺 ফাউন্ডেশনের সাম্প্রতিক সকল ভিডিও বুলেটিন ও খবরের আপডেট এখানে প্রকাশ করা হবে।</p>
+            <button class="btn btn-green" onclick="openModal('add-video-modal')">
+                <i class="fa-solid fa-video"></i> নতুন ভিডিও / সংবাদ যোগ করুন
+            </button>
+            <div id="videos-container">
+                <!-- Videos will render here -->
             </div>
         </div>
 
-        <!-- PAGE 3: MEMBERS -->
+        <!-- 3. MEMBERS VIEW -->
         <div id="page-members" class="page-view">
-            <div class="card-box">
-                <h3>সদস্য তালিকা</h3>
-                <p>👥 আল-খিদমাহ ছাত্র ফাউন্ডেশনের সকল সম্মানিত সদস্যদের তালিকা ও পরিচিতি শীঘ্রই হালনাগাদ করা হবে।</p>
+            <div class="card-box" style="margin-bottom: 10px;">
+                <h3>সকল সদস্যদের তালিকা</h3>
+                <p>ফাউন্ডেশনের নিবন্ধিত কার্যনির্বাহী ও সাধারণ সদস্যবৃন্দ।</p>
+            </div>
+            <div id="members-container">
+                <!-- Members will render here -->
             </div>
         </div>
 
-        <!-- PAGE 4: NOTICES -->
+        <!-- 4. NOTICES VIEW -->
         <div id="page-notices" class="page-view">
-            <div class="card-box">
-                <h3>জরুরি নোটিশ</h3>
-                <p>📢 সকল সদস্যদের অবগতির জন্য জানানো যাচ্ছে যে আগামী শুক্রবার বিশেষ বৈঠক অনুষ্ঠিত হবে।</p>
+            <button class="btn btn-green" onclick="openModal('add-notice-modal')">
+                <i class="fa-solid fa-bullhorn"></i> নতুন নোটিশ প্রকাশ করুন
+            </button>
+            <div id="notices-container">
+                <!-- Notices will render here -->
             </div>
         </div>
 
-        <!-- PAGE 5: PROFILE (Default) -->
-        <div id="page-profile" class="page-view active">
+        <!-- 5. PROFILE VIEW -->
+        <div id="page-profile" class="page-view">
             <div class="profile-card">
                 <div class="avatar-container">
                     <img src="https://via.placeholder.com/150" alt="Profile" class="avatar">
@@ -397,66 +407,112 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="openModal('signup-modal')">নতুন অ্যাকাউন্ট সাইন-আপ করুন</button>
-                <button class="btn btn-secondary" onclick="openEditModal()">✏️ প্রোফাইল তথ্য সম্পাদনা করুন</button>
+                <button class="btn btn-primary" onclick="openModal('signup-modal')">
+                    <i class="fa-solid fa-user-plus"></i> নতুন অ্যাকাউন্ট সাইন-আপ করুন
+                </button>
+                <button class="btn btn-secondary" onclick="openEditModal()">
+                    <i class="fa-solid fa-user-pen"></i> প্রোফাইল তথ্য সম্পাদনা করুন
+                </button>
             </div>
         </div>
 
-        <!-- MODAL 1: EDIT PROFILE -->
+        <!-- MODAL: ADD POST -->
+        <div id="add-post-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">নতুন পোস্ট প্রকাশ</span>
+                    <button class="close-btn" onclick="closeModal('add-post-modal')">&times;</button>
+                </div>
+                <form onsubmit="addPost(event)">
+                    <div class="form-group">
+                        <label>পোস্টের শিরোনাম / বিষয়</label>
+                        <input type="text" id="post-title" required placeholder="শিরোনাম লিখুন">
+                    </div>
+                    <div class="form-group">
+                        <label>বিস্তারিত বিবরণ</label>
+                        <textarea id="post-content" rows="3" required placeholder="বিবরণ লিখুন..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>ছবি লিংক (ঐচ্ছিক)</label>
+                        <input type="url" id="post-image" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <button type="submit" class="btn btn-primary">পোস্ট করুন</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL: ADD VIDEO -->
+        <div id="add-video-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">নতুন ভিডিও যোগ করুন</span>
+                    <button class="close-btn" onclick="closeModal('add-video-modal')">&times;</button>
+                </div>
+                <form onsubmit="addVideo(event)">
+                    <div class="form-group">
+                        <label>ভিডিওর শিরোনাম</label>
+                        <input type="text" id="video-title" required placeholder="শিরোনাম লিখুন">
+                    </div>
+                    <div class="form-group">
+                        <label>ইউটিউব ভিডিও এম্বেড লিংক (Embed URL)</label>
+                        <input type="url" id="video-url" required placeholder="https://www.youtube.com/embed/VIDEO_ID">
+                    </div>
+                    <button type="submit" class="btn btn-primary">ভিডিও প্রকাশ করুন</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL: ADD NOTICE -->
+        <div id="add-notice-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title">নতুন নোটিশ যোগ করুন</span>
+                    <button class="close-btn" onclick="closeModal('add-notice-modal')">&times;</button>
+                </div>
+                <form onsubmit="addNotice(event)">
+                    <div class="form-group">
+                        <label>নোটিশের বিষয়</label>
+                        <input type="text" id="notice-title" required placeholder="বিষয় লিখুন">
+                    </div>
+                    <div class="form-group">
+                        <label>নোটিশ বিবরণ</label>
+                        <textarea id="notice-content" rows="4" required placeholder="বিস্তারিত নোটিশ লিখুন..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">প্রকাশ করুন</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL: EDIT PROFILE -->
         <div id="edit-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title">প্রোফাইল সম্পাদনা করুন</span>
                     <button class="close-btn" onclick="closeModal('edit-modal')">&times;</button>
                 </div>
-                <form id="edit-form" onsubmit="saveProfile(event)">
-                    <div class="form-group">
-                        <label>নাম</label>
-                        <input type="text" id="input-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>পদবী</label>
-                        <input type="text" id="input-designation" required>
-                    </div>
-                    <div class="form-group">
-                        <label>পেশা</label>
-                        <input type="text" id="input-profession" required>
-                    </div>
-                    <div class="form-group">
-                        <label>শিক্ষা</label>
-                        <input type="text" id="input-education" required>
-                    </div>
-                    <div class="form-group">
-                        <label>ঠিকানা</label>
-                        <input type="text" id="input-address" required>
-                    </div>
-                    <div class="form-group">
-                        <label>ফোন নাম্বার</label>
-                        <input type="text" id="input-phone" required>
-                    </div>
+                <form onsubmit="saveProfile(event)">
+                    <div class="form-group"><label>নাম</label><input type="text" id="input-name" required></div>
+                    <div class="form-group"><label>পদবী</label><input type="text" id="input-designation" required></div>
+                    <div class="form-group"><label>পেশা</label><input type="text" id="input-profession" required></div>
+                    <div class="form-group"><label>শিক্ষা</label><input type="text" id="input-education" required></div>
+                    <div class="form-group"><label>ঠিকানা</label><input type="text" id="input-address" required></div>
+                    <div class="form-group"><label>ফোন নাম্বার</label><input type="text" id="input-phone" required></div>
                     <div class="form-group">
                         <label>রক্তের গ্রুপ</label>
                         <select id="input-blood">
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
+                            <option value="A+">A+</option><option value="A-">A-</option>
+                            <option value="B+">B+</option><option value="B-">B-</option>
+                            <option value="O+">O+</option><option value="O-">O-</option>
+                            <option value="AB+">AB+</option><option value="AB-">AB-</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>সদস্যপদ সাল</label>
-                        <input type="text" id="input-year" required>
-                    </div>
+                    <div class="form-group"><label>সদস্যপদ সাল</label><input type="text" id="input-year" required></div>
                     <button type="submit" class="btn btn-primary">তথ্য সেভ করুন</button>
                 </form>
             </div>
         </div>
 
-        <!-- MODAL 2: SIGN UP -->
+        <!-- MODAL: SIGN UP -->
         <div id="signup-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -466,19 +522,19 @@
                 <form onsubmit="handleSignup(event)">
                     <div class="form-group">
                         <label>আপনার পূর্ণ নাম</label>
-                        <input type="text" placeholder="নাম লিখুন" required>
+                        <input type="text" id="signup-name" placeholder="নাম লিখুন" required>
+                    </div>
+                    <div class="form-group">
+                        <label>পদবী / পরিচয়</label>
+                        <input type="text" id="signup-role" placeholder="যেমন: সাধারণ সদস্য" required>
                     </div>
                     <div class="form-group">
                         <label>মোবাইল নম্বর</label>
-                        <input type="tel" placeholder="০১৭XXXXXXXX" required>
+                        <input type="tel" id="signup-phone" placeholder="০১৭XXXXXXXX" required>
                     </div>
                     <div class="form-group">
                         <label>ইমেইল ঠিকানা</label>
                         <input type="email" placeholder="example@mail.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>পাসওয়ার্ড</label>
-                        <input type="password" placeholder="******" required>
                     </div>
                     <button type="submit" class="btn btn-primary">রেজিস্ট্রেশন সম্পন্ন করুন</button>
                 </form>
@@ -487,7 +543,7 @@
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <button class="nav-item" onclick="switchPage('home', this)">
+            <button class="nav-item active" onclick="switchPage('home', this)">
                 <i class="fa-solid fa-house"></i>
                 <span>হোম</span>
             </button>
@@ -503,33 +559,165 @@
                 <i class="fa-solid fa-bullhorn"></i>
                 <span>নোটিশ</span>
             </button>
-            <button class="nav-item active" onclick="switchPage('profile', this)">
+            <button class="nav-item" onclick="switchPage('profile', this)">
                 <i class="fa-solid fa-user"></i>
                 <span>প্রোফাইল</span>
             </button>
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR INTERACTIVITY -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Page Navigation Logic
+        // Default Data
+        const defaultPosts = [
+            { title: "স্বাগতম!", content: "আল-খিদমাহ ছাত্র ফাউন্ডেশন-এর অফিশিয়াল প্ল্যাটফর্মে আপনাকে স্বাগতম। আমাদের উদ্দেশ্য শিক্ষার্থীদের দক্ষতা বৃদ্ধি ও সামাজিক সেবা করা।", date: "আজ" },
+            { title: "সাম্প্রতিক কার্যক্রম", content: "📌 বার্ষিক সাধারণ সভা ও ছাত্র বৃত্তি প্রদান অনুষ্ঠান শীঘ্রই অনুষ্ঠিত হতে যাচ্ছে।", date: "গতকাল" }
+        ];
+
+        const defaultMembers = [
+            { name: "মোঃ শামীম", role: "সম্মানিত কার্যকরী সদস্য" },
+            { name: "আব্দুল্লাহ আল মামুন", role: "সাধারণ সম্পাদক" },
+            { name: "মোহাম্মদ রফিকুল ইসলাম", role: "কার্যকরী সদস্য" }
+        ];
+
+        const defaultNotices = [
+            { title: "বিশেষ সাধারণ সভা", content: "📢 আগামী শুক্রবার বিকেল ৪টায় ফাউন্ডেশনের কার্যালয়ে জরুরি বৈঠক অনুষ্ঠিত হবে।" }
+        ];
+
+        const defaultVideos = [
+            { title: "ফাউন্ডেশনের পরিচিতি ও লক্ষ্য", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+        ];
+
+        // Switch Page
         function switchPage(pageId, btnElement) {
-            document.querySelectorAll('.page-view').forEach(page => page.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-            
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             btnElement.classList.add('active');
         }
 
-        // Modal Functions
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+        // Modal Helpers
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Render Posts
+        function renderPosts() {
+            const posts = JSON.parse(localStorage.getItem('posts')) || defaultPosts;
+            const container = document.getElementById('posts-container');
+            container.innerHTML = posts.map(p => `
+                <div class="card-box">
+                    <div class="post-time"><i class="fa-regular fa-clock"></i> ${p.date || 'সাম্প্রতিক'}</div>
+                    <h3>${p.title}</h3>
+                    <p>${p.content}</p>
+                    ${p.img ? `<img src="${p.img}" class="post-img">` : ''}
+                </div>
+            `).join('');
         }
 
-        // Open Edit Modal with current values
+        // Add Post
+        function addPost(e) {
+            e.preventDefault();
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const img = document.getElementById('post-image').value;
+            
+            const posts = JSON.parse(localStorage.getItem('posts')) || defaultPosts;
+            posts.unshift({ title, content, img, date: new Date().toLocaleDateString('bn-BD') });
+            localStorage.setItem('posts', JSON.stringify(posts));
+
+            renderPosts();
+            closeModal('add-post-modal');
+            e.target.reset();
+        }
+
+        // Render Members
+        function renderMembers() {
+            const members = JSON.parse(localStorage.getItem('members')) || defaultMembers;
+            const container = document.getElementById('members-container');
+            container.innerHTML = members.map(m => `
+                <div class="member-card">
+                    <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                    <div class="member-info">
+                        <h4>${m.name}</h4>
+                        <p>${m.role}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Notices
+        function renderNotices() {
+            const notices = JSON.parse(localStorage.getItem('notices')) || defaultNotices;
+            const container = document.getElementById('notices-container');
+            container.innerHTML = notices.map(n => `
+                <div class="card-box">
+                    <h3>${n.title}</h3>
+                    <p>${n.content}</p>
+                </div>
+            `).join('');
+        }
+
+        // Add Notice
+        function addNotice(e) {
+            e.preventDefault();
+            const title = document.getElementById('notice-title').value;
+            const content = document.getElementById('notice-content').value;
+            
+            const notices = JSON.parse(localStorage.getItem('notices')) || defaultNotices;
+            notices.unshift({ title, content });
+            localStorage.setItem('notices', JSON.stringify(notices));
+
+            renderNotices();
+            closeModal('add-notice-modal');
+            e.target.reset();
+        }
+
+        // Render Videos
+        function renderVideos() {
+            const videos = JSON.parse(localStorage.getItem('videos')) || defaultVideos;
+            const container = document.getElementById('videos-container');
+            container.innerHTML = videos.map(v => `
+                <div class="card-box">
+                    <h3>${v.title}</h3>
+                    <div class="video-container">
+                        <iframe src="${v.url}" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add Video
+        function addVideo(e) {
+            e.preventDefault();
+            const title = document.getElementById('video-title').value;
+            const url = document.getElementById('video-url').value;
+            
+            const videos = JSON.parse(localStorage.getItem('videos')) || defaultVideos;
+            videos.unshift({ title, url });
+            localStorage.setItem('videos', JSON.stringify(videos));
+
+            renderVideos();
+            closeModal('add-video-modal');
+            e.target.reset();
+        }
+
+        // Handle Signup
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const role = document.getElementById('signup-role').value;
+
+            const members = JSON.parse(localStorage.getItem('members')) || defaultMembers;
+            members.push({ name, role });
+            localStorage.setItem('members', JSON.stringify(members));
+
+            renderMembers();
+            closeModal('signup-modal');
+            alert('আপনার সদস্য সাইন-আপ সম্পন্ন হয়েছে! সদস্য তালিকায় আপনার নাম যুক্ত করা হয়েছে।');
+            e.target.reset();
+        }
+
+        // Edit Profile
         function openEditModal() {
             document.getElementById('input-name').value = document.getElementById('view-name').innerText;
             document.getElementById('input-designation').value = document.getElementById('view-designation').innerText;
@@ -539,11 +727,9 @@
             document.getElementById('input-phone').value = document.getElementById('view-phone').innerText;
             document.getElementById('input-blood').value = document.getElementById('view-blood').innerText;
             document.getElementById('input-year').value = document.getElementById('view-year').innerText;
-            
             openModal('edit-modal');
         }
 
-        // Save Profile Logic
         function saveProfile(e) {
             e.preventDefault();
             const name = document.getElementById('input-name').value;
@@ -555,7 +741,6 @@
             const blood = document.getElementById('input-blood').value;
             const year = document.getElementById('input-year').value;
 
-            // Update UI
             document.getElementById('view-name').innerText = name;
             document.getElementById('view-designation').innerText = designation;
             document.getElementById('view-profession').innerText = profession;
@@ -565,19 +750,21 @@
             document.getElementById('view-blood').innerText = blood;
             document.getElementById('view-year').innerText = year;
 
-            // Save to LocalStorage
-            const profileData = { name, designation, profession, education, address, phone, blood, year };
-            localStorage.setItem('userProfile', JSON.stringify(profileData));
-
+            localStorage.setItem('userProfile', JSON.stringify({ name, designation, profession, education, address, phone, blood, year }));
             closeModal('edit-modal');
-            alert('আপনার প্রোফাইল তথ্য সফলভাবে আপডেট হয়েছে!');
+            alert('প্রোফাইল আপডেট হয়েছে!');
         }
 
-        // Load Saved Profile on Page Load
+        // Initial Load
         window.onload = function() {
-            const savedData = localStorage.getItem('userProfile');
-            if(savedData) {
-                const data = JSON.parse(savedData);
+            renderPosts();
+            renderMembers();
+            renderNotices();
+            renderVideos();
+
+            const savedProfile = localStorage.getItem('userProfile');
+            if(savedProfile) {
+                const data = JSON.parse(savedProfile);
                 document.getElementById('view-name').innerText = data.name;
                 document.getElementById('view-designation').innerText = data.designation;
                 document.getElementById('view-profession').innerText = data.profession;
@@ -588,13 +775,6 @@
                 document.getElementById('view-year').innerText = data.year;
             }
         };
-
-        // Signup Form Handler
-        function handleSignup(e) {
-            e.preventDefault();
-            closeModal('signup-modal');
-            alert('আপনার রেজিস্ট্রেশন আবেদনটি জমা নেওয়া হয়েছে!');
-        }
     </script>
 </body>
 </html>
