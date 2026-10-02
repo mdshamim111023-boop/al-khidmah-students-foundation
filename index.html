@@ -936,7 +936,7 @@
             const savedProfile = localStorage.getItem('app_profile');
             if(savedProfile) {
                 const data = JSON.parse(savedProfile);
-                document.getElementById('view-name').innerText = data.name;
+                 document.getElementById('view-name').innerText = data.name;
                 document.getElementById('view-designation').innerText = data.designation;
                 document.getElementById('view-profession').innerText = data.profession;
                 document.getElementById('view-education').innerText = data.education;
@@ -948,5 +948,55 @@
             }
         };
     </script>
+<!-- index.html ফাইলের ভেতরে -->
+<script type="module">
+  // ১. ফায়ারবেস মডিউল ইমপোর্ট
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // ২. ফায়ারবেস কনফিগারেশন
+  const firebaseConfig = {
+    apiKey: "AIzaSyDpHXNNOPJX-40Pivfc1HIElsMe8XZk4W4",
+    authDomain: "al-khedmah-foundation.firebaseapp.com",
+    projectId: "al-khedmah-foundation",
+    storageBucket: "al-khedmah-foundation.firebasestorage.app",
+    messagingSenderId: "311353286939",
+    appId: "1:311353286939:web:6f15cd31a6069575b173be"
+  };
+
+  // ৩. ফায়ারবেস ও ফায়ারস্টোর ইনিশিয়ালাইজ করা
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ৪. পোস্ট তৈরি করার ফাংশন (সবাই দেখতে পাবে)
+  window.createPost = async function(title, content, authorId) {
+    try {
+      await addDoc(collection(db, "posts"), {
+        title: title,
+        content: content,
+        authorId: authorId,
+        createdAt: serverTimestamp()
+      });
+      alert("পোস্ট সফলভাবে সম্পন্ন হয়েছে!");
+    } catch (error) {
+      console.error("Error creating post: ", error);
+    }
+  };
+
+  // ৫. প্রাইভেট মেসেজ পাঠানোর ফাংশন (শুধু প্রেরক, প্রাপক ও এডমিন দেখতে পাবে)
+  window.sendMessage = async function(senderId, receiverId, messageText) {
+    try {
+      await addDoc(collection(db, "messages"), {
+        senderId: senderId,     // প্রেরকের আইডি
+        receiverId: receiverId, // প্রাপকের আইডি
+        text: messageText,
+        timestamp: serverTimestamp()
+      });
+      alert("মেসেজ পাঠানো হয়েছে!");
+    } catch (error) {
+      console.error("Error sending message: ", error);
+    }
+  };
+</script>
 </body>
 </html>
